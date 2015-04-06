@@ -54,12 +54,12 @@ for FILE in "${FILES[@]}" ; do
 	NAME=${FILE##*/}
 	if [[ $FILE == *.[gG][zZ] ]] ; then
 		NAME=${NAME%.[gG][zZ]}
-		DB=${NAME%.[sS][qQ][lL]}
+		DB=$(echo ${NAME%.[sS][qQ][lL]} | sed -r 's/(_[0-9]{4}-?[0-9]{1,2}-?[0-9]{1,2}(_[0-9]{1,2}h?[0-9]{1,2}m?([0-9]{1,2}s?)?)?([_\.](sun|mon|(tues?)|(wed(nes)?)|(thu(rs?)?)|fri|(sat(ur)?))(day)?)?)$//i')
 		echo "$DB << $FILE"
 		mysql "${ARGS[@]}" -e "create database if not exists \`$DB\`;"
 		mysql $DB "${ARGS[@]}" < <(gunzip -c "$FILE")
 	else
-		DB=${NAME%.[sS][qQ][lL]}
+		DB=$(echo ${NAME%.[sS][qQ][lL]} | sed -r 's/(_[0-9]{4}-?[0-9]{1,2}-?[0-9]{1,2}(_[0-9]{1,2}h?[0-9]{1,2}m?([0-9]{1,2}s?)?)?([_\.](sun|mon|(tues?)|(wed(nes)?)|(thu(rs?)?)|fri|(sat(ur)?))(day)?)?)$//i')
 		echo "$DB << $FILE"
 		mysql "${ARGS[@]}" -e "create database if not exists \`$DB\`;"
 		mysql $DB "${ARGS[@]}" < "$FILE"
